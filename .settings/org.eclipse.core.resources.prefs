@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//WebContent/fenxidetail.jsp=UTF-8
+encoding//WebContent/foot.jsp=UTF-8
+encoding//WebContent/login.jsp=UTF-8
+encoding//WebContent/top.jsp=UTF-8
+encoding//WebContent/user/userMangement.jsp=UTF-8
+encoding//WebContent/xuanshang.jsp=UTF-8
+encoding//src/com/wmx/op/interceptor/HandlerInterceptor1.java=UTF-8
+encoding//src/com/wmx/op/interceptor/LoginInterceptor.java=UTF-8
+encoding//src/com/wmx/op/webmagic/MyProcessor.java=UTF-8
+encoding/<project>=UTF-8

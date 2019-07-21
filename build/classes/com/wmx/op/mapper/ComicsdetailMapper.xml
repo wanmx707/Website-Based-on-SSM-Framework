@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.ComicsdetailMapper" >
+  <resultMap id="BaseResultMap" type="com.wmx.op.po.Comicsdetail" >
+    <id column="DetailID" property="detailid" jdbcType="INTEGER" />
+    <result column="ComicsId" property="comicsid" jdbcType="INTEGER" />
+    <result column="Detailpaper" property="detailpaper" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    DetailID, ComicsId, Detailpaper
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wmx.op.po.ComicsdetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from comicsdetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from comicsdetail
+    where DetailID = #{detailid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from comicsdetail
+    where DetailID = #{detailid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wmx.op.po.ComicsdetailExample" >
+    delete from comicsdetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wmx.op.po.Comicsdetail" >
+    insert into comicsdetail (DetailID, ComicsId, Detailpaper
+      )
+    values (#{detailid,jdbcType=INTEGER}, #{comicsid,jdbcType=INTEGER}, #{detailpaper,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wmx.op.po.Comicsdetail" >
+    insert into comicsdetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="detailid != null" >
+        DetailID,
+      </if>
+      <if test="comicsid != null" >
+        ComicsId,
+      </if>
+      <if test="detailpaper != null" >
+        Detailpaper,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="detailid != null" >
+        #{detailid,jdbcType=INTEGER},
+      </if>
+      <if test="comicsid != null" >
+        #{comicsid,jdbcType=INTEGER},
+      </if>
+      <if test="detailpaper != null" >
+        #{detailpaper,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.wmx.op.po.ComicsdetailExample" resultType="java.lang.Integer" >
+    select count(*) from comicsdetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update comicsdetail
+    <set >
+      <if test="record.detailid != null" >
+        DetailID = #{record.detailid,jdbcType=INTEGER},
+      </if>
+      <if test="record.comicsid != null" >
+        ComicsId = #{record.comicsid,jdbcType=INTEGER},
+      </if>
+      <if test="record.detailpaper != null" >
+        Detailpaper = #{record.detailpaper,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update comicsdetail
+    set DetailID = #{record.detailid,jdbcType=INTEGER},
+      ComicsId = #{record.comicsid,jdbcType=INTEGER},
+      Detailpaper = #{record.detailpaper,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Comicsdetail" >
+    update comicsdetail
+    <set >
+      <if test="comicsid != null" >
+        ComicsId = #{comicsid,jdbcType=INTEGER},
+      </if>
+      <if test="detailpaper != null" >
+        Detailpaper = #{detailpaper,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DetailID = #{detailid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Comicsdetail" >
+    update comicsdetail
+    set ComicsId = #{comicsid,jdbcType=INTEGER},
+      Detailpaper = #{detailpaper,jdbcType=VARCHAR}
+    where DetailID = #{detailid,jdbcType=INTEGER}
+  </update>
+</mapper>

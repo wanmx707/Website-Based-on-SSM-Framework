@@ -1,0 +1,122 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+	<!-- 可以扫描controller、service、..... 这里让扫描controller，指定controller的包 -->
+	<context:component-scan base-package="com.wmx.op.controller"></context:component-scan>
+
+	<!-- 使用mvc:annotation-driven可以代替注解映射器和注解适配器的配置 mvc:annotation-driven默认加载很多的参数绑定方法，比如json转换解析器就默认加载了， 
+		如果使用mvc:annotation-driven不用配置RequestMappingHandlerMapping和RequestMappingHandlerAdapter 
+		实际开发使用mvc:annotation-driven -->
+	<mvc:annotation-driven conversion-service="conversionService"
+		validator="validator">
+	</mvc:annotation-driven>
+
+	<!--静态资源的解析 包括js、css、img.... -->
+	<!-- <mvc:resources location="/js/" mapping="/js/**"/> <mvc:resources location="/img/" 
+		mapping="/img/**"/> -->
+	<mvc:default-servlet-handler />
+
+	<!-- 视图解析器 解析jsp视图，默认使用jstl标签，calsspath下得由jstl包 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 配置jsp的前缀 -->
+		<property name="prefix" value="/" />
+		<!-- 配置jsp的后缀 -->
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 自定义参数绑定 -->
+	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<!-- 转换器 -->
+		<property name="converters">
+			<list>
+				<!-- 日期类型装欢 -->
+				<bean class="com.wmx.op.controller.converter.CustomDateConverter" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 校验器 -->
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<!-- hibernate校验器 -->
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+		<!-- 指定校验使用的资源文件，在文件中配置校验 错误信息，如果不指定则默认使用classpath下的ValidationMessages.properties -->
+		<property name="validationMessageSource" ref="messageSource" />
+	</bean>
+	<!-- 校验错误信息配置文件 -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<!-- 资源文件名 -->
+		<property name="basenames">
+			<list>
+				<value>classpath:CustomValidationMessages</value>
+			</list>
+		</property>
+		<!-- 资源文件编码格式 -->
+		<property name="fileEncodings" value="utf-8" />
+		<!-- 对资源文件内容缓存时间，单位秒 -->
+		<property name="cacheSeconds" value="120" />
+	</bean>
+
+	<!-- 全局异常处理器 只要实现HandlerExceptionResolver接口就是全局异常处理器 -->
+	<bean class="com.wmx.op.exception.CustomExceptionResolver">
+	</bean>
+
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设置上传文件的最大尺寸为100MB -->
+		<property name="maxUploadSize">
+			<value>104857600</value>
+		</property>
+	</bean>
+
+	<!-- 拦截器 -->
+	 <mvc:interceptors>
+		<!--  多个拦截器,顺序执行 登录认证拦截器  -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/queryindex.action" />
+			<mvc:exclude-mapping path="/Login.action" />
+			<mvc:exclude-mapping path="/Logout.action" />
+			<mvc:exclude-mapping path="/register.action" />
+			<mvc:exclude-mapping path="/findanimeByid.action" />
+			<mvc:exclude-mapping path="/findanime.action" />
+			<mvc:exclude-mapping path="/findcomics.action" />
+			<mvc:exclude-mapping path="/findcomicsDetail.action" />
+			<mvc:exclude-mapping path="/findInformation.action" />
+			<mvc:exclude-mapping path="/findInforByid.action" />
+			<mvc:exclude-mapping path="/findNews.action" />
+			<mvc:exclude-mapping path="/findfenxiDetail.action" />
+			<mvc:exclude-mapping path="/finddata.action" />
+			<mvc:exclude-mapping path="/findopdataByID.action" />
+			<mvc:exclude-mapping path="/findPicture.action" />
+			<mvc:exclude-mapping path="/findPictureByid.action" />
+			<mvc:exclude-mapping path="/getCode.action" />
+			<mvc:exclude-mapping path="/setpassword.action" />
+			<mvc:exclude-mapping path="/findVideoById.action" />
+			<mvc:exclude-mapping path="/findvideoPage.action" />
+			<mvc:exclude-mapping path="/findvideoByid.action" />
+			<mvc:exclude-mapping path="/findFruitByid.action" />
+			<mvc:exclude-mapping path="/jubao.action" />
+			<bean class="com.wmx.op.interceptor.LoginInterceptor"></bean>
+		</mvc:interceptor>
+		 <!--<mvc:interceptor> 表示所有url包括子url路径 <mvc:mapping path="/**" /> <bean 
+			class="com.wmx.op.interceptor.HandlerInterceptor1"></bean> </mvc:interceptor> 
+			<mvc:interceptor> <mvc:mapping path="/**" /> <bean class="com.wmx.op.interceptor.HandlerInterceptor2"></bean> 
+			</mvc:interceptor> -->
+	</mvc:interceptors> 
+</beans>

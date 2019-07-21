@@ -1,0 +1,30 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+	<!-- 注入service -->
+	<bean id="indexService" class="com.wmx.op.service.impl.IndexServiceImpl"></bean>
+	<bean id="animeService" class="com.wmx.op.service.impl.AnimeServiceImpl"></bean>
+	<bean id="comicsService" class="com.wmx.op.service.impl.ComicsServiceImpl"></bean>
+	<bean id="userService" class="com.wmx.op.service.impl.UserServiceImpl"></bean>
+	<bean id="newsService" class="com.wmx.op.service.impl.NewsServiceImpl"></bean>
+	<bean id="uploadService" class="com.wmx.op.service.impl.UploadServiceImpl"></bean>
+	<bean id="uploadPicService" class="com.wmx.op.service.impl.UploadPicServiceImpl"></bean>
+	<bean id="pictureService" class="com.wmx.op.service.impl.PictureServiceImpl"></bean>
+	<bean id="informationService" class="com.wmx.op.service.impl.InformationServiceImpl"></bean>
+	<bean id="ReviewSerivce" class="com.wmx.op.service.impl.ReviewSerivceImpl"></bean>
+	<bean id="uservideoService" class="com.wmx.op.service.impl.UservideoServiceImpl"></bean>
+	<bean id="opdataService" class="com.wmx.op.service.impl.OpdataServiceImpl"></bean>
+	<bean id="pictureDetailService" class="com.wmx.op.service.impl.PictureDetailServiceImpl"></bean>
+	<bean id="fruitService" class="com.wmx.op.service.impl.FruitServiceImpl"></bean>
+</beans>

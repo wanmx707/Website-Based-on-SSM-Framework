@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.MessageMapper">
+	<resultMap id="BaseResultMap" type="com.wmx.op.po.Message">
+		<id column="MessageID" property="messageid" jdbcType="INTEGER" />
+		<result column="MessageuserId" property="messageuserid"
+			jdbcType="INTEGER" />
+		<result column="AnimeAddtime" property="animeaddtime" jdbcType="TIMESTAMP" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.wmx.op.po.Message"
+		extends="BaseResultMap">
+		<result column="Messagecontent" property="messagecontent"
+			jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		MessageID, MessageuserId, AnimeAddtime, uuid
+	</sql>
+	<sql id="Blob_Column_List">
+		Messagecontent
+	</sql>
+	<select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
+		parameterType="com.wmx.op.po.MessageExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from message
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.MessageExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from message
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from message
+		where MessageID = #{messageid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from message
+		where MessageID = #{messageid,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.wmx.op.po.MessageExample">
+		delete from message
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.wmx.op.po.Message">
+		insert into message (MessageID, MessageuserId, AnimeAddtime,
+		uuid, Messagecontent)
+		values (#{messageid,jdbcType=INTEGER}, #{messageuserid,jdbcType=INTEGER},
+		#{animeaddtime,jdbcType=TIMESTAMP},
+		#{uuid,jdbcType=VARCHAR}, #{messagecontent,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.wmx.op.po.Message">
+		insert into message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="messageid != null">
+				MessageID,
+			</if>
+			<if test="messageuserid != null">
+				MessageuserId,
+			</if>
+			<if test="animeaddtime != null">
+				AnimeAddtime,
+			</if>
+			<if test="uuid != null">
+				uuid,
+			</if>
+			<if test="messagecontent != null">
+				Messagecontent,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="messageid != null">
+				#{messageid,jdbcType=INTEGER},
+			</if>
+			<if test="messageuserid != null">
+				#{messageuserid,jdbcType=INTEGER},
+			</if>
+			<if test="animeaddtime != null">
+				#{animeaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="uuid != null">
+				#{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="messagecontent != null">
+				#{messagecontent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.wmx.op.po.MessageExample"
+		resultType="java.lang.Integer">
+		select count(*) from message
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update message
+		<set>
+			<if test="record.messageid != null">
+				MessageID = #{record.messageid,jdbcType=INTEGER},
+			</if>
+			<if test="record.messageuserid != null">
+				MessageuserId = #{record.messageuserid,jdbcType=INTEGER},
+			</if>
+			<if test="record.animeaddtime != null">
+				AnimeAddtime = #{record.animeaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.uuid != null">
+				uuid = #{record.uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="record.messagecontent != null">
+				Messagecontent = #{record.messagecontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExampleWithBLOBs" parameterType="map">
+		update message
+		set MessageID = #{record.messageid,jdbcType=INTEGER},
+		MessageuserId = #{record.messageuserid,jdbcType=INTEGER},
+		AnimeAddtime = #{record.animeaddtime,jdbcType=TIMESTAMP},
+		uuid = #{record.uuid,jdbcType=VARCHAR},
+		Messagecontent = #{record.messagecontent,jdbcType=LONGVARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update message
+		set MessageID = #{record.messageid,jdbcType=INTEGER},
+		MessageuserId = #{record.messageuserid,jdbcType=INTEGER},
+		AnimeAddtime = #{record.animeaddtime,jdbcType=TIMESTAMP},
+		uuid = #{record.uuid,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Message">
+		update message
+		<set>
+			<if test="messageuserid != null">
+				MessageuserId = #{messageuserid,jdbcType=INTEGER},
+			</if>
+			<if test="animeaddtime != null">
+				AnimeAddtime = #{animeaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="uuid != null">
+				uuid = #{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="messagecontent != null">
+				Messagecontent = #{messagecontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where MessageID = #{messageid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wmx.op.po.Message">
+		update message
+		set MessageuserId = #{messageuserid,jdbcType=INTEGER},
+		AnimeAddtime = #{animeaddtime,jdbcType=TIMESTAMP},
+		uuid = #{uuid,jdbcType=VARCHAR},
+		Messagecontent = #{messagecontent,jdbcType=LONGVARCHAR}
+		where MessageID = #{messageid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Message">
+		update message
+		set MessageuserId = #{messageuserid,jdbcType=INTEGER},
+		AnimeAddtime = #{animeaddtime,jdbcType=TIMESTAMP},
+		uuid = #{uuid,jdbcType=VARCHAR}
+		where MessageID = #{messageid,jdbcType=INTEGER}
+	</update>
+</mapper>

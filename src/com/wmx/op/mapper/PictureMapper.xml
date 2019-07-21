@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.PictureMapper">
+	<resultMap id="BaseResultMap" type="com.wmx.op.po.Picture">
+		<id column="picID" property="picid" jdbcType="INTEGER" />
+		<result column="userId" property="userid" jdbcType="INTEGER" />
+		<result column="picname" property="picname" jdbcType="VARCHAR" />
+		<result column="picfengmian" property="picfengmian" jdbcType="VARCHAR" />
+		<result column="picAddtime" property="picaddtime" jdbcType="TIMESTAMP" />
+		<result column="Status" property="status" jdbcType="INTEGER" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.wmx.op.po.Picture"
+		extends="BaseResultMap">
+		<result column="piccontent" property="piccontent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<resultMap type="com.wmx.op.po.Picture" id="findPicDetailResultMap"
+		extends="ResultMapWithBLOBs">
+		<collection property="picturedetail" ofType="com.wmx.op.po.Picturedetail">
+			<id column="picdetailID" property="picdetailid" />
+			<result column="picID" property="picid" />
+			<result column="Picway" property="picway" />
+		</collection>
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		picID, userId, picname, picfengmian, picAddtime, Status,
+		uuid
+	</sql>
+	<sql id="Blob_Column_List">
+		piccontent
+	</sql>
+	<select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
+		parameterType="com.wmx.op.po.PictureExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from picture
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.PictureExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from picture
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<!-- 首页 -->
+	<select id="selectByIndex" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.PictureExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from picture WHERE STATUS<![CDATA[<>]]>0
+		ORDER BY picAddtime DESC LIMIT 9
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from picture
+		where picID = #{picid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		picture
+		where picID = #{picid,jdbcType=INTEGER}
+	</delete>
+	<!-- 查询列表 -->
+	<select id="selectByPictureCustom" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.PictureCustom">
+		SELECT * FROM picture WHERE STATUS<![CDATA[<>]]>0
+		ORDER BY picAddtime DESC LIMIT
+		#{pageNo,jdbcType=INTEGER
+		},#{pageSize,jdbcType=INTEGER }
+
+	</select>
+	<!-- 查询单个漫画 -->
+	<select id="findPicDetail" parameterType="java.lang.Integer"
+		resultMap="findPicDetailResultMap">
+		SELECT * FROM picture,picturedetail WHERE
+		picture.picID=picturedetail.picID
+		AND
+		picture.picID=#{picid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByExample" parameterType="com.wmx.op.po.PictureExample">
+		delete from picture
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.wmx.op.po.Picture">
+		insert into picture (picID,
+		userId, picname,
+		picfengmian, picAddtime, Status,
+		uuid, piccontent)
+		values (#{picid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER},
+		#{picname,jdbcType=VARCHAR},
+		#{picfengmian,jdbcType=VARCHAR},
+		#{picaddtime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER},
+		#{uuid,jdbcType=VARCHAR}, #{piccontent,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.wmx.op.po.Picture">
+		insert into picture
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="picid != null">
+				picID,
+			</if>
+			<if test="userid != null">
+				userId,
+			</if>
+			<if test="picname != null">
+				picname,
+			</if>
+			<if test="picfengmian != null">
+				picfengmian,
+			</if>
+			<if test="picaddtime != null">
+				picAddtime,
+			</if>
+			<if test="status != null">
+				Status,
+			</if>
+			<if test="uuid != null">
+				uuid,
+			</if>
+			<if test="piccontent != null">
+				piccontent,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="picid != null">
+				#{picid,jdbcType=INTEGER},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=INTEGER},
+			</if>
+			<if test="picname != null">
+				#{picname,jdbcType=VARCHAR},
+			</if>
+			<if test="picfengmian != null">
+				#{picfengmian,jdbcType=VARCHAR},
+			</if>
+			<if test="picaddtime != null">
+				#{picaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="uuid != null">
+				#{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="piccontent != null">
+				#{piccontent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="picid">
+			SELECT LAST_INSERT_ID() AS picID
+		</selectKey>
+	</insert>
+	<select id="countByExample" parameterType="com.wmx.op.po.PictureExample"
+		resultType="java.lang.Integer">
+		select count(*) from picture
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+
+	<!-- 查询页数 -->
+	<select id="selectPage" resultType="java.lang.Integer"
+		parameterType="com.wmx.op.po.Picture">
+		SELECT COUNT(picid) FROM picture WHERE
+		UserId=#{userid,jdbcType=INTEGER }
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectByPage" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.PictureCustom">
+		SELECT * FROM picture WHERE
+		UserId=#{userid,jdbcType=INTEGER } ORDER BY picAddtime DESC
+		LIMIT
+		#{pageNo,jdbcType=INTEGER },#{pageSize,jdbcType=INTEGER }
+	</select>
+	<!-- 查询未审核数 -->
+	<select id="selectstatusPage" resultType="java.lang.Integer"
+		parameterType="com.wmx.op.po.PictureCustom">
+		SELECT COUNT(picid)
+		FROM picture WHERE
+		STATUS=#{status,jdbcType=INTEGER }
+	</select>
+	<!-- 审核清况查询 -->
+	<select id="selectstatusByPage" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.PictureCustom">
+		SELECT * FROM picture WHERE
+		STATUS=#{status,jdbcType=INTEGER } ORDER BY picAddtime
+		LIMIT
+		#{pageNo,jdbcType=INTEGER },#{pageSize,jdbcType=INTEGER }
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update picture
+		<set>
+			<if test="record.picid != null">
+				picID = #{record.picid,jdbcType=INTEGER},
+			</if>
+			<if test="record.userid != null">
+				userId = #{record.userid,jdbcType=INTEGER},
+			</if>
+			<if test="record.picname != null">
+				picname = #{record.picname,jdbcType=VARCHAR},
+			</if>
+			<if test="record.picfengmian != null">
+				picfengmian = #{record.picfengmian,jdbcType=VARCHAR},
+			</if>
+			<if test="record.picaddtime != null">
+				picAddtime = #{record.picaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.status != null">
+				Status = #{record.status,jdbcType=INTEGER},
+			</if>
+			<if test="record.uuid != null">
+				uuid = #{record.uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="record.piccontent != null">
+				piccontent = #{record.piccontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExampleWithBLOBs" parameterType="map">
+		update picture
+		set picID = #{record.picid,jdbcType=INTEGER},
+		userId =
+		#{record.userid,jdbcType=INTEGER},
+		picname =
+		#{record.picname,jdbcType=VARCHAR},
+		picfengmian =
+		#{record.picfengmian,jdbcType=VARCHAR},
+		picAddtime =
+		#{record.picaddtime,jdbcType=TIMESTAMP},
+		Status =
+		#{record.status,jdbcType=INTEGER},
+		uuid =
+		#{record.uuid,jdbcType=VARCHAR},
+		piccontent =
+		#{record.piccontent,jdbcType=LONGVARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update picture
+		set picID = #{record.picid,jdbcType=INTEGER},
+		userId =
+		#{record.userid,jdbcType=INTEGER},
+		picname =
+		#{record.picname,jdbcType=VARCHAR},
+		picfengmian =
+		#{record.picfengmian,jdbcType=VARCHAR},
+		picAddtime =
+		#{record.picaddtime,jdbcType=TIMESTAMP},
+		Status =
+		#{record.status,jdbcType=INTEGER},
+		uuid =
+		#{record.uuid,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Picture">
+		update picture
+		<set>
+			<if test="userid != null">
+				userId = #{userid,jdbcType=INTEGER},
+			</if>
+			<if test="picname != null">
+				picname = #{picname,jdbcType=VARCHAR},
+			</if>
+			<if test="picfengmian != null">
+				picfengmian = #{picfengmian,jdbcType=VARCHAR},
+			</if>
+			<if test="picaddtime != null">
+				picAddtime = #{picaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				Status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="uuid != null">
+				uuid = #{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="piccontent != null">
+				piccontent = #{piccontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where picID = #{picid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wmx.op.po.Picture">
+		update
+		picture
+		set userId = #{userid,jdbcType=INTEGER},
+		picname =
+		#{picname,jdbcType=VARCHAR},
+		picfengmian =
+		#{picfengmian,jdbcType=VARCHAR},
+		picAddtime =
+		#{picaddtime,jdbcType=TIMESTAMP},
+		Status = #{status,jdbcType=INTEGER},
+		uuid = #{uuid,jdbcType=VARCHAR},
+		piccontent =
+		#{piccontent,jdbcType=LONGVARCHAR}
+		where picID =
+		#{picid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Picture">
+		update picture
+		set
+		userId = #{userid,jdbcType=INTEGER},
+		picname =
+		#{picname,jdbcType=VARCHAR},
+		picfengmian =
+		#{picfengmian,jdbcType=VARCHAR},
+		picAddtime =
+		#{picaddtime,jdbcType=TIMESTAMP},
+		Status = #{status,jdbcType=INTEGER},
+		uuid = #{uuid,jdbcType=VARCHAR}
+		where picID = #{picid,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.CommentMapper">
+	<resultMap id="BaseResultMap" type="com.wmx.op.po.Comment">
+		<id column="CommentID" property="commentid" jdbcType="INTEGER" />
+		<result column="CommenttoPicId" property="commenttopicid"
+			jdbcType="INTEGER" />
+		<result column="CommentuserId" property="commentuserid"
+			jdbcType="INTEGER" />
+		<result column="CommentAddtime" property="commentaddtime"
+			jdbcType="TIMESTAMP" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.wmx.op.po.Comment"
+		extends="BaseResultMap">
+		<result column="Commentcontent" property="commentcontent"
+			jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<resultMap type="com.wmx.op.po.Comment" id="ResultMapCommentReply"
+		extends="ResultMapWithBLOBs">
+		<collection property="replyList" ofType="com.wmx.op.po.Reply">
+			<id column="ReplyID" property="replyid" />
+			<result column="ReplyuserId" property="replyuserid" />
+			<result column="ReplytoCommentId" property="replytocommentid" />
+			<result column="ReplyAddtime" property="replyaddtime" />
+			<result column="Replycontent" property="replycontent" />
+		</collection>
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		CommentID, CommenttoPicId, CommentuserId, CommentAddtime,
+		uuid
+	</sql>
+	<sql id="Blob_Column_List">
+		Commentcontent
+	</sql>
+	<!-- 查询评论和回复 -->
+	<select id="findCommentAndReply" parameterType="java.lang.String"
+		resultMap="ResultMapCommentReply">
+		SELECT * FROM comment,reply WHERE
+		comment.CommentID=reply.ReplytoCommentId AND
+		UUID=#{uuid,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
+		parameterType="com.wmx.op.po.CommentExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from comment
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.CommentExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from comment
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from comment
+		where CommentID = #{commentid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		comment
+		where CommentID = #{commentid,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.wmx.op.po.CommentExample">
+		delete from comment
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.wmx.op.po.Comment">
+		insert into comment
+		(CommentID, CommenttoPicId, CommentuserId,
+		CommentAddtime, uuid,
+		Commentcontent
+		)
+		values (#{commentid,jdbcType=INTEGER},
+		#{commenttopicid,jdbcType=INTEGER},
+		#{commentuserid,jdbcType=INTEGER},
+		#{commentaddtime,jdbcType=TIMESTAMP}, #{uuid,jdbcType=VARCHAR},
+		#{commentcontent,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.wmx.op.po.Comment">
+		insert into comment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="commentid != null">
+				CommentID,
+			</if>
+			<if test="commenttopicid != null">
+				CommenttoPicId,
+			</if>
+			<if test="commentuserid != null">
+				CommentuserId,
+			</if>
+			<if test="commentaddtime != null">
+				CommentAddtime,
+			</if>
+			<if test="uuid != null">
+				uuid,
+			</if>
+			<if test="commentcontent != null">
+				Commentcontent,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="commentid != null">
+				#{commentid,jdbcType=INTEGER},
+			</if>
+			<if test="commenttopicid != null">
+				#{commenttopicid,jdbcType=INTEGER},
+			</if>
+			<if test="commentuserid != null">
+				#{commentuserid,jdbcType=INTEGER},
+			</if>
+			<if test="commentaddtime != null">
+				#{commentaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="uuid != null">
+				#{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="commentcontent != null">
+				#{commentcontent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.wmx.op.po.CommentExample"
+		resultType="java.lang.Integer">
+		select count(*) from comment
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update comment
+		<set>
+			<if test="record.commentid != null">
+				CommentID = #{record.commentid,jdbcType=INTEGER},
+			</if>
+			<if test="record.commenttopicid != null">
+				CommenttoPicId =
+				#{record.commenttopicid,jdbcType=INTEGER},
+			</if>
+			<if test="record.commentuserid != null">
+				CommentuserId = #{record.commentuserid,jdbcType=INTEGER},
+			</if>
+			<if test="record.commentaddtime != null">
+				CommentAddtime =
+				#{record.commentaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.uuid != null">
+				uuid = #{record.uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="record.commentcontent != null">
+				Commentcontent =
+				#{record.commentcontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExampleWithBLOBs" parameterType="map">
+		update comment
+		set CommentID = #{record.commentid,jdbcType=INTEGER},
+		CommenttoPicId = #{record.commenttopicid,jdbcType=INTEGER},
+		CommentuserId = #{record.commentuserid,jdbcType=INTEGER},
+		CommentAddtime = #{record.commentaddtime,jdbcType=TIMESTAMP},
+		uuid =
+		#{record.uuid,jdbcType=VARCHAR},
+		Commentcontent =
+		#{record.commentcontent,jdbcType=LONGVARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update comment
+		set CommentID = #{record.commentid,jdbcType=INTEGER},
+		CommenttoPicId = #{record.commenttopicid,jdbcType=INTEGER},
+		CommentuserId = #{record.commentuserid,jdbcType=INTEGER},
+		CommentAddtime = #{record.commentaddtime,jdbcType=TIMESTAMP},
+		uuid =
+		#{record.uuid,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Comment">
+		update comment
+		<set>
+			<if test="commenttopicid != null">
+				CommenttoPicId = #{commenttopicid,jdbcType=INTEGER},
+			</if>
+			<if test="commentuserid != null">
+				CommentuserId = #{commentuserid,jdbcType=INTEGER},
+			</if>
+			<if test="commentaddtime != null">
+				CommentAddtime = #{commentaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="uuid != null">
+				uuid = #{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="commentcontent != null">
+				Commentcontent = #{commentcontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where CommentID = #{commentid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wmx.op.po.Comment">
+		update
+		comment
+		set CommenttoPicId = #{commenttopicid,jdbcType=INTEGER},
+		CommentuserId = #{commentuserid,jdbcType=INTEGER},
+		CommentAddtime =
+		#{commentaddtime,jdbcType=TIMESTAMP},
+		uuid = #{uuid,jdbcType=VARCHAR},
+		Commentcontent = #{commentcontent,jdbcType=LONGVARCHAR}
+		where CommentID
+		= #{commentid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Comment">
+		update comment
+		set
+		CommenttoPicId = #{commenttopicid,jdbcType=INTEGER},
+		CommentuserId =
+		#{commentuserid,jdbcType=INTEGER},
+		CommentAddtime =
+		#{commentaddtime,jdbcType=TIMESTAMP},
+		uuid = #{uuid,jdbcType=VARCHAR}
+		where CommentID = #{commentid,jdbcType=INTEGER}
+	</update>
+</mapper>

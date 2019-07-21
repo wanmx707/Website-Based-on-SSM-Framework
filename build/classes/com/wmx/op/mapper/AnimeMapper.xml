@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.AnimeMapper">
+	<resultMap id="BaseResultMap" type="com.wmx.op.po.Anime">
+		<id column="AnimeID" property="animeid" jdbcType="INTEGER" />
+		<result column="Animepid" property="animepid" jdbcType="VARCHAR" />
+		<result column="Animetitle" property="animetitle" jdbcType="VARCHAR" />
+		<result column="Way" property="way" jdbcType="VARCHAR" />
+		<result column="AnimeAddtime" property="animeaddtime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.wmx.op.po.Anime"
+		extends="BaseResultMap">
+		<result column="Animecontent" property="animecontent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		AnimeID, Animepid, Animetitle, Way, AnimeAddtime
+	</sql>
+	<sql id="Blob_Column_List">
+		Animecontent
+	</sql>
+	<select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
+		parameterType="com.wmx.op.po.AnimeExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from anime
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.AnimeExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from anime
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<!-- 升序查询动画列表 -->
+	<select id="selectASCAnime" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.AnimeExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from anime ORDER BY Animepid
+	</select>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from anime
+		where AnimeID = #{animeid,jdbcType=INTEGER}
+	</select>
+	<!-- 管理动画分页查询 -->
+	<select id="selectAnimeByPage" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.AnimeCustom">
+		SELECT * FROM anime ORDER BY Animepid DESC LIMIT #{pageNo,jdbcType=INTEGER
+		},#{pageSize,jdbcType=INTEGER }
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from anime
+		where AnimeID = #{animeid,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.wmx.op.po.AnimeExample">
+		delete from anime
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.wmx.op.po.Anime">
+		insert into anime (AnimeID,
+		Animepid, Animetitle,
+		Way, AnimeAddtime, Animecontent
+		)
+		values
+		(#{animeid,jdbcType=INTEGER}, #{animepid,jdbcType=VARCHAR},
+		#{animetitle,jdbcType=VARCHAR},
+		#{way,jdbcType=VARCHAR},
+		#{animeaddtime,jdbcType=TIMESTAMP},
+		#{animecontent,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.wmx.op.po.Anime">
+		insert into anime
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="animeid != null">
+				AnimeID,
+			</if>
+			<if test="animepid != null">
+				Animepid,
+			</if>
+			<if test="animetitle != null">
+				Animetitle,
+			</if>
+			<if test="way != null">
+				Way,
+			</if>
+			<if test="animeaddtime != null">
+				AnimeAddtime,
+			</if>
+			<if test="animecontent != null">
+				Animecontent,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="animeid != null">
+				#{animeid,jdbcType=INTEGER},
+			</if>
+			<if test="animepid != null">
+				#{animepid,jdbcType=VARCHAR},
+			</if>
+			<if test="animetitle != null">
+				#{animetitle,jdbcType=VARCHAR},
+			</if>
+			<if test="way != null">
+				#{way,jdbcType=VARCHAR},
+			</if>
+			<if test="animeaddtime != null">
+				#{animeaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="animecontent != null">
+				#{animecontent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.wmx.op.po.AnimeExample"
+		resultType="java.lang.Integer">
+		select count(*) from anime
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<!-- 首页 -->
+	<select id="selectIndexAnime" resultType="com.wmx.op.po.Anime">
+		select 
+		<include refid="Base_Column_List" /> 
+		from anime ORDER BY Animepid DESC LIMIT 5
+	</select>
+
+	<update id="updateByExampleSelective" parameterType="map">
+		update anime
+		<set>
+			<if test="record.animeid != null">
+				AnimeID = #{record.animeid,jdbcType=INTEGER},
+			</if>
+			<if test="record.animepid != null">
+				Animepid = #{record.animepid,jdbcType=VARCHAR},
+			</if>
+			<if test="record.animetitle != null">
+				Animetitle = #{record.animetitle,jdbcType=VARCHAR},
+			</if>
+			<if test="record.way != null">
+				Way = #{record.way,jdbcType=VARCHAR},
+			</if>
+			<if test="record.animeaddtime != null">
+				AnimeAddtime = #{record.animeaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.animecontent != null">
+				Animecontent =
+				#{record.animecontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExampleWithBLOBs" parameterType="map">
+		update anime
+		set AnimeID = #{record.animeid,jdbcType=INTEGER},
+		Animepid
+		= #{record.animepid,jdbcType=VARCHAR},
+		Animetitle =
+		#{record.animetitle,jdbcType=VARCHAR},
+		Way =
+		#{record.way,jdbcType=VARCHAR},
+		AnimeAddtime =
+		#{record.animeaddtime,jdbcType=TIMESTAMP},
+		Animecontent =
+		#{record.animecontent,jdbcType=LONGVARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update anime
+		set AnimeID = #{record.animeid,jdbcType=INTEGER},
+		Animepid
+		= #{record.animepid,jdbcType=VARCHAR},
+		Animetitle =
+		#{record.animetitle,jdbcType=VARCHAR},
+		Way =
+		#{record.way,jdbcType=VARCHAR},
+		AnimeAddtime =
+		#{record.animeaddtime,jdbcType=TIMESTAMP}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Anime">
+		update anime
+		<set>
+			<if test="animepid != null">
+				Animepid = #{animepid,jdbcType=VARCHAR},
+			</if>
+			<if test="animetitle != null">
+				Animetitle = #{animetitle,jdbcType=VARCHAR},
+			</if>
+			<if test="way != null">
+				Way = #{way,jdbcType=VARCHAR},
+			</if>
+			<if test="animeaddtime != null">
+				AnimeAddtime = #{animeaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="animecontent != null">
+				Animecontent = #{animecontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where AnimeID = #{animeid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wmx.op.po.Anime">
+		update
+		anime
+		set Animepid = #{animepid,jdbcType=VARCHAR},
+		Animetitle =
+		#{animetitle,jdbcType=VARCHAR},
+		Way = #{way,jdbcType=VARCHAR},
+		AnimeAddtime = #{animeaddtime,jdbcType=TIMESTAMP},
+		Animecontent =
+		#{animecontent,jdbcType=LONGVARCHAR}
+		where AnimeID =
+		#{animeid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Anime">
+		update anime
+		set
+		Animepid = #{animepid,jdbcType=VARCHAR},
+		Animetitle =
+		#{animetitle,jdbcType=VARCHAR},
+		Way = #{way,jdbcType=VARCHAR},
+		AnimeAddtime = #{animeaddtime,jdbcType=TIMESTAMP}
+		where AnimeID =
+		#{animeid,jdbcType=INTEGER}
+	</update>
+</mapper>

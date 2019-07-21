@@ -1,0 +1,45 @@
+.pure-menu.pure-menu-horizontal li .pure-menu-children, .pure-menu.pure-menu-open
+	{
+	text-align: left;
+	height: 70px;
+	background: 0 0
+}
+
+@media ( min-width :319px) and (max-width:359px) {
+	.pure-menu li a {
+		padding: 15px 2px
+	}
+	#header li a {
+		font-size: 13px
+	}
+	.logo img {
+		width: 177px;
+		height: 61px
+	}
+}
+
+@media ( min-width :360px) and (max-width:399px) {
+	.pure-menu li a {
+		padding: 15px 6px
+	}
+	#header li a {
+		font-size: 14px
+	}
+	.logo img {
+		width: 180px;
+		height: 61px
+	}
+}
+
+@media ( min-width :400px) and (max-width:415px) {
+	.pure-menu li a {
+		padding: 15px 8px
+	}
+	#header li a {
+		font-size: 16px
+	}
+	.logo img {
+		width: 180px;
+		height: 61px
+	}
+}

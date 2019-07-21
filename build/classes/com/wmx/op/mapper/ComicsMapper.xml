@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.ComicsMapper">
+	<cache eviction="LRU" type="com.wmx.op.cache.RedisCache" />
+	<resultMap id="BaseResultMap" type="com.wmx.op.po.Comics">
+		<id column="ComicsId" property="comicsid" jdbcType="INTEGER" />
+		<result column="ComicsName" property="comicsname" jdbcType="VARCHAR" />
+		<result column="Addtime" property="addtime" jdbcType="TIMESTAMP" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap type="com.wmx.op.po.Comics" id="findComicsDetaiolResultMap"
+		extends="BaseResultMap">
+		<collection property="comicsdetail" ofType="com.wmx.op.po.Comicsdetail">
+			<id column="DetailID" property="detailid" />
+			<result column="ComicsId" property="comicsid" />
+			<result column="Detailpaper" property="detailpaper" />
+		</collection>
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ComicsId, ComicsName, Addtime, uuid
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.ComicsExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from comics ORDER BY ComicsName DESC
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<!-- 首页 -->
+	<select id="selectByIndex" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.ComicsExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from comics ORDER BY ComicsName DESC LIMIT 0,5
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from comics
+		where ComicsId = #{comicsid,jdbcType=INTEGER}
+	</select>
+
+	<!-- 查询所有漫画 -->
+
+	<!-- 查询单个漫画 -->
+	<select id="findComicsDetail" parameterType="java.lang.Integer"
+		resultMap="findComicsDetaiolResultMap">
+		SELECT * FROM comics,comicsdetail WHERE
+		comics.ComicsId=comicsdetail.ComicsId AND
+		comics.ComicsId=#{comicsid,jdbcType=INTEGER}
+	</select>
+	<!-- 管理分页查询 -->
+	<select id="selectComicsManageByPage" parameterType="com.wmx.op.po.ComicsCustom"
+	resultMap="BaseResultMap">
+	SELECT * FROM comics ORDER BY ComicsName DESC LIMIT
+	#{pageNo,jdbcType=INTEGER },#{pageSize,jdbcType=INTEGER }
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from comics
+		where ComicsId = #{comicsid,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.wmx.op.po.ComicsExample">
+		delete from comics
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.wmx.op.po.Comics">
+		insert into comics (ComicsId,
+		ComicsName, Addtime,
+		uuid)
+		values (#{comicsid,jdbcType=INTEGER},
+		#{comicsname,jdbcType=VARCHAR},
+		#{addtime,jdbcType=TIMESTAMP},
+		#{uuid,jdbcType=VARCHAR})
+	</insert>
+	<!-- 插入信息返回id -->
+	<insert id="insertSelective" parameterType="com.wmx.op.po.Comics">
+		insert into comics
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="comicsid != null">
+				ComicsId,
+			</if>
+			<if test="comicsname != null">
+				ComicsName,
+			</if>
+			<if test="addtime != null">
+				Addtime,
+			</if>
+			<if test="uuid != null">
+				uuid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="comicsid != null">
+				#{comicsid,jdbcType=INTEGER},
+			</if>
+			<if test="comicsname != null">
+				#{comicsname,jdbcType=VARCHAR},
+			</if>
+			<if test="addtime != null">
+				#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="uuid != null">
+				#{uuid,jdbcType=VARCHAR},
+			</if>
+		</trim>
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="comicsid">
+			SELECT LAST_INSERT_ID() AS comicsid
+		</selectKey>
+	</insert>
+	<select id="countByExample" parameterType="com.wmx.op.po.ComicsExample"
+		resultType="java.lang.Integer">
+		select count(*) from comics
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update comics
+		<set>
+			<if test="record.comicsid != null">
+				ComicsId = #{record.comicsid,jdbcType=INTEGER},
+			</if>
+			<if test="record.comicsname != null">
+				ComicsName = #{record.comicsname,jdbcType=VARCHAR},
+			</if>
+			<if test="record.addtime != null">
+				Addtime = #{record.addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.uuid != null">
+				uuid = #{record.uuid,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update comics
+		set ComicsId = #{record.comicsid,jdbcType=INTEGER},
+		ComicsName = #{record.comicsname,jdbcType=VARCHAR},
+		Addtime =
+		#{record.addtime,jdbcType=TIMESTAMP},
+		uuid =
+		#{record.uuid,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Comics">
+		update comics
+		<set>
+			<if test="comicsname != null">
+				ComicsName = #{comicsname,jdbcType=VARCHAR},
+			</if>
+			<if test="addtime != null">
+				Addtime = #{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="uuid != null">
+				uuid = #{uuid,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ComicsId = #{comicsid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Comics">
+		update comics
+		set
+		ComicsName = #{comicsname,jdbcType=VARCHAR},
+		Addtime =
+		#{addtime,jdbcType=TIMESTAMP},
+		uuid = #{uuid,jdbcType=VARCHAR}
+		where
+		ComicsId = #{comicsid,jdbcType=INTEGER}
+	</update>
+</mapper>

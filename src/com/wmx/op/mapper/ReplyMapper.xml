@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.ReplyMapper" >
+  <resultMap id="BaseResultMap" type="com.wmx.op.po.Reply" >
+    <id column="ReplyID" property="replyid" jdbcType="INTEGER" />
+    <result column="ReplyuserId" property="replyuserid" jdbcType="INTEGER" />
+    <result column="ReplytoCommentId" property="replytocommentid" jdbcType="INTEGER" />
+    <result column="ReplyAddtime" property="replyaddtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.wmx.op.po.Reply" extends="BaseResultMap" >
+    <result column="Replycontent" property="replycontent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ReplyID, ReplyuserId, ReplytoCommentId, ReplyAddtime
+  </sql>
+  <sql id="Blob_Column_List" >
+    Replycontent
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.wmx.op.po.ReplyExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from reply
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wmx.op.po.ReplyExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from reply
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from reply
+    where ReplyID = #{replyid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from reply
+    where ReplyID = #{replyid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wmx.op.po.ReplyExample" >
+    delete from reply
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wmx.op.po.Reply" >
+    insert into reply (ReplyID, ReplyuserId, ReplytoCommentId, 
+      ReplyAddtime, Replycontent)
+    values (#{replyid,jdbcType=INTEGER}, #{replyuserid,jdbcType=INTEGER}, #{replytocommentid,jdbcType=INTEGER}, 
+      #{replyaddtime,jdbcType=TIMESTAMP}, #{replycontent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wmx.op.po.Reply" >
+    insert into reply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="replyid != null" >
+        ReplyID,
+      </if>
+      <if test="replyuserid != null" >
+        ReplyuserId,
+      </if>
+      <if test="replytocommentid != null" >
+        ReplytoCommentId,
+      </if>
+      <if test="replyaddtime != null" >
+        ReplyAddtime,
+      </if>
+      <if test="replycontent != null" >
+        Replycontent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="replyid != null" >
+        #{replyid,jdbcType=INTEGER},
+      </if>
+      <if test="replyuserid != null" >
+        #{replyuserid,jdbcType=INTEGER},
+      </if>
+      <if test="replytocommentid != null" >
+        #{replytocommentid,jdbcType=INTEGER},
+      </if>
+      <if test="replyaddtime != null" >
+        #{replyaddtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replycontent != null" >
+        #{replycontent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.wmx.op.po.ReplyExample" resultType="java.lang.Integer" >
+    select count(*) from reply
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update reply
+    <set >
+      <if test="record.replyid != null" >
+        ReplyID = #{record.replyid,jdbcType=INTEGER},
+      </if>
+      <if test="record.replyuserid != null" >
+        ReplyuserId = #{record.replyuserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.replytocommentid != null" >
+        ReplytoCommentId = #{record.replytocommentid,jdbcType=INTEGER},
+      </if>
+      <if test="record.replyaddtime != null" >
+        ReplyAddtime = #{record.replyaddtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.replycontent != null" >
+        Replycontent = #{record.replycontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update reply
+    set ReplyID = #{record.replyid,jdbcType=INTEGER},
+      ReplyuserId = #{record.replyuserid,jdbcType=INTEGER},
+      ReplytoCommentId = #{record.replytocommentid,jdbcType=INTEGER},
+      ReplyAddtime = #{record.replyaddtime,jdbcType=TIMESTAMP},
+      Replycontent = #{record.replycontent,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update reply
+    set ReplyID = #{record.replyid,jdbcType=INTEGER},
+      ReplyuserId = #{record.replyuserid,jdbcType=INTEGER},
+      ReplytoCommentId = #{record.replytocommentid,jdbcType=INTEGER},
+      ReplyAddtime = #{record.replyaddtime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Reply" >
+    update reply
+    <set >
+      <if test="replyuserid != null" >
+        ReplyuserId = #{replyuserid,jdbcType=INTEGER},
+      </if>
+      <if test="replytocommentid != null" >
+        ReplytoCommentId = #{replytocommentid,jdbcType=INTEGER},
+      </if>
+      <if test="replyaddtime != null" >
+        ReplyAddtime = #{replyaddtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replycontent != null" >
+        Replycontent = #{replycontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ReplyID = #{replyid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wmx.op.po.Reply" >
+    update reply
+    set ReplyuserId = #{replyuserid,jdbcType=INTEGER},
+      ReplytoCommentId = #{replytocommentid,jdbcType=INTEGER},
+      ReplyAddtime = #{replyaddtime,jdbcType=TIMESTAMP},
+      Replycontent = #{replycontent,jdbcType=LONGVARCHAR}
+    where ReplyID = #{replyid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Reply" >
+    update reply
+    set ReplyuserId = #{replyuserid,jdbcType=INTEGER},
+      ReplytoCommentId = #{replytocommentid,jdbcType=INTEGER},
+      ReplyAddtime = #{replyaddtime,jdbcType=TIMESTAMP}
+    where ReplyID = #{replyid,jdbcType=INTEGER}
+  </update>
+</mapper>

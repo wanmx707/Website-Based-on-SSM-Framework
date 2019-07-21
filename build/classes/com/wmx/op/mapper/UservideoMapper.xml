@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.UservideoMapper">
+	<resultMap id="BaseResultMap" type="com.wmx.op.po.Uservideo">
+		<id column="videoID" property="videoid" jdbcType="INTEGER" />
+		<result column="videotitle" property="videotitle" jdbcType="VARCHAR" />
+		<result column="videopic" property="videopic" jdbcType="VARCHAR" />
+		<result column="UserId" property="userid" jdbcType="INTEGER" />
+		<result column="way" property="way" jdbcType="VARCHAR" />
+		<result column="videoAddtime" property="videoaddtime" jdbcType="TIMESTAMP" />
+		<result column="ststus" property="ststus" jdbcType="INTEGER" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.wmx.op.po.Uservideo"
+		extends="BaseResultMap">
+		<result column="videocontent" property="videocontent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		videoID, videotitle, videopic, UserId, way, videoAddtime,
+		ststus, uuid
+	</sql>
+	<sql id="Blob_Column_List">
+		videocontent
+	</sql>
+	<select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
+		parameterType="com.wmx.op.po.UservideoExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from uservideo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.UservideoExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from uservideo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<!-- 首页 -->
+	<select id="selectByIndex" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.UservideoExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from uservideo WHERE ststus<![CDATA[<>]]>0 ORDER BY videoAddtime DESC LIMIT 9
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from uservideo
+		where videoID = #{videoid,jdbcType=INTEGER}
+	</select>
+
+	<!-- 查询页数 -->
+	<select id="selectPage" resultType="java.lang.Integer"
+		parameterType="com.wmx.op.po.Uservideo">
+		SELECT COUNT(videoID) FROM uservideo WHERE
+		UserId=#{userid,jdbcType=INTEGER }
+	</select>
+	<!-- 用户分页查询 -->
+	<select id="selectByPage" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.UservideoCustom">
+		SELECT * FROM uservideo WHERE
+		UserId=#{userid,jdbcType=INTEGER } ORDER BY videoAddtime DESC
+		LIMIT
+		#{pageNo,jdbcType=INTEGER },#{pageSize,jdbcType=INTEGER }
+	</select>
+
+	<!-- 主分页查询 -->
+	<select id="selectvideoList" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.UservideoCustom">
+		SELECT * FROM uservideo ORDER BY videoAddtime
+		LIMIT
+		#{pageNo,jdbcType=INTEGER },#{pageSize,jdbcType=INTEGER }
+	</select>
+	
+	<!-- 查询页数 -->
+	<select id="selectstatus" resultType="java.lang.Integer">
+		SELECT COUNT(videoID) FROM uservideo WHERE
+		ststus=0
+	</select>
+	<!-- 审核分页查询 -->
+	<select id="selectBystatus" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.UservideoCustom">
+		SELECT * FROM uservideo WHERE
+		ststus=0 ORDER BY videoAddtime
+		LIMIT
+		#{pageNo,jdbcType=INTEGER },#{pageSize,jdbcType=INTEGER }
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		uservideo
+		where videoID = #{videoid,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.wmx.op.po.UservideoExample">
+		delete from uservideo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.wmx.op.po.Uservideo">
+		insert into uservideo
+		(videoID, videotitle, videopic,
+		UserId, way, videoAddtime,
+		ststus, uuid,
+		videocontent
+		)
+		values (#{videoid,jdbcType=INTEGER},
+		#{videotitle,jdbcType=VARCHAR},
+		#{videopic,jdbcType=VARCHAR},
+		#{userid,jdbcType=INTEGER}, #{way,jdbcType=VARCHAR},
+		#{videoaddtime,jdbcType=TIMESTAMP},
+		#{ststus,jdbcType=INTEGER},
+		#{uuid,jdbcType=VARCHAR},
+		#{videocontent,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.wmx.op.po.Uservideo">
+		insert into uservideo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="videoid != null">
+				videoID,
+			</if>
+			<if test="videotitle != null">
+				videotitle,
+			</if>
+			<if test="videopic != null">
+				videopic,
+			</if>
+			<if test="userid != null">
+				UserId,
+			</if>
+			<if test="way != null">
+				way,
+			</if>
+			<if test="videoaddtime != null">
+				videoAddtime,
+			</if>
+			<if test="ststus != null">
+				ststus,
+			</if>
+			<if test="uuid != null">
+				uuid,
+			</if>
+			<if test="videocontent != null">
+				videocontent,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="videoid != null">
+				#{videoid,jdbcType=INTEGER},
+			</if>
+			<if test="videotitle != null">
+				#{videotitle,jdbcType=VARCHAR},
+			</if>
+			<if test="videopic != null">
+				#{videopic,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=INTEGER},
+			</if>
+			<if test="way != null">
+				#{way,jdbcType=VARCHAR},
+			</if>
+			<if test="videoaddtime != null">
+				#{videoaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ststus != null">
+				#{ststus,jdbcType=INTEGER},
+			</if>
+			<if test="uuid != null">
+				#{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="videocontent != null">
+				#{videocontent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.wmx.op.po.UservideoExample"
+		resultType="java.lang.Integer">
+		select count(*) from uservideo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update uservideo
+		<set>
+			<if test="record.videoid != null">
+				videoID = #{record.videoid,jdbcType=INTEGER},
+			</if>
+			<if test="record.videotitle != null">
+				videotitle = #{record.videotitle,jdbcType=VARCHAR},
+			</if>
+			<if test="record.videopic != null">
+				videopic = #{record.videopic,jdbcType=VARCHAR},
+			</if>
+			<if test="record.userid != null">
+				UserId = #{record.userid,jdbcType=INTEGER},
+			</if>
+			<if test="record.way != null">
+				way = #{record.way,jdbcType=VARCHAR},
+			</if>
+			<if test="record.videoaddtime != null">
+				videoAddtime = #{record.videoaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.ststus != null">
+				ststus = #{record.ststus,jdbcType=INTEGER},
+			</if>
+			<if test="record.uuid != null">
+				uuid = #{record.uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="record.videocontent != null">
+				videocontent =
+				#{record.videocontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExampleWithBLOBs" parameterType="map">
+		update uservideo
+		set videoID = #{record.videoid,jdbcType=INTEGER},
+		videotitle = #{record.videotitle,jdbcType=VARCHAR},
+		videopic =
+		#{record.videopic,jdbcType=VARCHAR},
+		UserId =
+		#{record.userid,jdbcType=INTEGER},
+		way =
+		#{record.way,jdbcType=VARCHAR},
+		videoAddtime =
+		#{record.videoaddtime,jdbcType=TIMESTAMP},
+		ststus =
+		#{record.ststus,jdbcType=INTEGER},
+		uuid =
+		#{record.uuid,jdbcType=VARCHAR},
+		videocontent =
+		#{record.videocontent,jdbcType=LONGVARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update uservideo
+		set videoID = #{record.videoid,jdbcType=INTEGER},
+		videotitle = #{record.videotitle,jdbcType=VARCHAR},
+		videopic =
+		#{record.videopic,jdbcType=VARCHAR},
+		UserId =
+		#{record.userid,jdbcType=INTEGER},
+		way =
+		#{record.way,jdbcType=VARCHAR},
+		videoAddtime =
+		#{record.videoaddtime,jdbcType=TIMESTAMP},
+		ststus =
+		#{record.ststus,jdbcType=INTEGER},
+		uuid =
+		#{record.uuid,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Uservideo">
+		update uservideo
+		<set>
+			<if test="videotitle != null">
+				videotitle = #{videotitle,jdbcType=VARCHAR},
+			</if>
+			<if test="videopic != null">
+				videopic = #{videopic,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				UserId = #{userid,jdbcType=INTEGER},
+			</if>
+			<if test="way != null">
+				way = #{way,jdbcType=VARCHAR},
+			</if>
+			<if test="videoaddtime != null">
+				videoAddtime = #{videoaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="ststus != null">
+				ststus = #{ststus,jdbcType=INTEGER},
+			</if>
+			<if test="uuid != null">
+				uuid = #{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="videocontent != null">
+				videocontent = #{videocontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where videoID = #{videoid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wmx.op.po.Uservideo">
+		update
+		uservideo
+		set videotitle = #{videotitle,jdbcType=VARCHAR},
+		videopic =
+		#{videopic,jdbcType=VARCHAR},
+		UserId = #{userid,jdbcType=INTEGER},
+		way =
+		#{way,jdbcType=VARCHAR},
+		videoAddtime =
+		#{videoaddtime,jdbcType=TIMESTAMP},
+		ststus =
+		#{ststus,jdbcType=INTEGER},
+		uuid = #{uuid,jdbcType=VARCHAR},
+		videocontent = #{videocontent,jdbcType=LONGVARCHAR}
+		where videoID =
+		#{videoid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Uservideo">
+		update uservideo
+		set videotitle = #{videotitle,jdbcType=VARCHAR},
+		videopic =
+		#{videopic,jdbcType=VARCHAR},
+		UserId = #{userid,jdbcType=INTEGER},
+		way =
+		#{way,jdbcType=VARCHAR},
+		videoAddtime =
+		#{videoaddtime,jdbcType=TIMESTAMP},
+		ststus =
+		#{ststus,jdbcType=INTEGER},
+		uuid = #{uuid,jdbcType=VARCHAR}
+		where
+		videoID = #{videoid,jdbcType=INTEGER}
+	</update>
+</mapper>

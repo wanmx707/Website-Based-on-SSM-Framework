@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.InformationMapper">
+	<resultMap id="BaseResultMap" type="com.wmx.op.po.Information">
+		<id column="InforID" property="inforid" jdbcType="INTEGER" />
+		<result column="Infortitle" property="infortitle" jdbcType="VARCHAR" />
+		<result column="InforAddtime" property="inforaddtime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.wmx.op.po.Information"
+		extends="BaseResultMap">
+		<result column="Inforcontent" property="inforcontent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		InforID, Infortitle, InforAddtime
+	</sql>
+	<sql id="Blob_Column_List">
+		Inforcontent
+	</sql>
+	<select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
+		parameterType="com.wmx.op.po.InformationExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from information
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.InformationExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from information
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<!-- 首页 -->
+	<select id="selectByIndex" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.InformationExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from information ORDER BY InforAddtime DESC LIMIT 0,15
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from information
+		where InforID = #{inforid,jdbcType=INTEGER}
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectByPage" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.InformationCustom">
+		SELECT * FROM information ORDER BY InforAddtime DESC
+		LIMIT #{pageNo,jdbcType=INTEGER },#{pageSize,jdbcType=INTEGER }
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		information
+		where InforID = #{inforid,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.wmx.op.po.InformationExample">
+		delete from information
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.wmx.op.po.Information">
+		insert into information
+		(InforID, Infortitle, InforAddtime,
+		Inforcontent)
+		values
+		(#{inforid,jdbcType=INTEGER}, #{infortitle,jdbcType=VARCHAR},
+		#{inforaddtime,jdbcType=TIMESTAMP},
+		#{inforcontent,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.wmx.op.po.Information">
+		insert into information
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="inforid != null">
+				InforID,
+			</if>
+			<if test="infortitle != null">
+				Infortitle,
+			</if>
+			<if test="inforaddtime != null">
+				InforAddtime,
+			</if>
+			<if test="inforcontent != null">
+				Inforcontent,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="inforid != null">
+				#{inforid,jdbcType=INTEGER},
+			</if>
+			<if test="infortitle != null">
+				#{infortitle,jdbcType=VARCHAR},
+			</if>
+			<if test="inforaddtime != null">
+				#{inforaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inforcontent != null">
+				#{inforcontent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.wmx.op.po.InformationExample"
+		resultType="java.lang.Integer">
+		select count(*) from information
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update information
+		<set>
+			<if test="record.inforid != null">
+				InforID = #{record.inforid,jdbcType=INTEGER},
+			</if>
+			<if test="record.infortitle != null">
+				Infortitle = #{record.infortitle,jdbcType=VARCHAR},
+			</if>
+			<if test="record.inforaddtime != null">
+				InforAddtime = #{record.inforaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.inforcontent != null">
+				Inforcontent =
+				#{record.inforcontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExampleWithBLOBs" parameterType="map">
+		update information
+		set InforID = #{record.inforid,jdbcType=INTEGER},
+		Infortitle = #{record.infortitle,jdbcType=VARCHAR},
+		InforAddtime =
+		#{record.inforaddtime,jdbcType=TIMESTAMP},
+		Inforcontent =
+		#{record.inforcontent,jdbcType=LONGVARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update information
+		set InforID = #{record.inforid,jdbcType=INTEGER},
+		Infortitle = #{record.infortitle,jdbcType=VARCHAR},
+		InforAddtime =
+		#{record.inforaddtime,jdbcType=TIMESTAMP}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Information">
+		update information
+		<set>
+			<if test="infortitle != null">
+				Infortitle = #{infortitle,jdbcType=VARCHAR},
+			</if>
+			<if test="inforaddtime != null">
+				InforAddtime = #{inforaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="inforcontent != null">
+				Inforcontent = #{inforcontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where InforID = #{inforid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wmx.op.po.Information">
+		update
+		information
+		set Infortitle = #{infortitle,jdbcType=VARCHAR},
+		InforAddtime = #{inforaddtime,jdbcType=TIMESTAMP},
+		Inforcontent =
+		#{inforcontent,jdbcType=LONGVARCHAR}
+		where InforID =
+		#{inforid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Information">
+		update information
+		set Infortitle = #{infortitle,jdbcType=VARCHAR},
+		InforAddtime =
+		#{inforaddtime,jdbcType=TIMESTAMP}
+		where InforID =
+		#{inforid,jdbcType=INTEGER}
+	</update>
+</mapper>

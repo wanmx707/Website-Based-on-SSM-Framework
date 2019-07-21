@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.FruitMapper">
+	<resultMap id="BaseResultMap" type="com.wmx.op.po.Fruit">
+		<id column="fruitID" property="fruitid" jdbcType="INTEGER" />
+		<result column="fruitTypeID" property="fruittypeid" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="addtime" property="addtime" jdbcType="TIMESTAMP" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.wmx.op.po.Fruit"
+		extends="BaseResultMap">
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		fruitID, fruitTypeID, title, addtime, uuid
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+	<select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
+		parameterType="com.wmx.op.po.FruitExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fruit
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.FruitExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from fruit
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from fruit
+		where fruitID = #{fruitid,jdbcType=INTEGER}
+	</select>
+	<!-- 管理分页查询 -->
+	<select id="selectFruitBypage" resultMap="BaseResultMap" parameterType="com.wmx.op.po.FruitCustom">
+		SELECT fruitID,fruitTypeID,title,ADDTIME,UUID FROM fruit ORDER BY ADDTIME
+		DESC LIMIT #{pageNo,jdbcType=INTEGER },#{pageSize,jdbcType=INTEGER }
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from fruit
+		where fruitID = #{fruitid,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.wmx.op.po.FruitExample">
+		delete from fruit
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.wmx.op.po.Fruit">
+		insert into fruit (fruitID,
+		fruitTypeID, title,
+		addtime, uuid, content
+		)
+		values
+		(#{fruitid,jdbcType=INTEGER}, #{fruittypeid,jdbcType=INTEGER},
+		#{title,jdbcType=VARCHAR},
+		#{addtime,jdbcType=TIMESTAMP},
+		#{uuid,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.wmx.op.po.Fruit">
+		insert into fruit
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fruitid != null">
+				fruitID,
+			</if>
+			<if test="fruittypeid != null">
+				fruitTypeID,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="addtime != null">
+				addtime,
+			</if>
+			<if test="uuid != null">
+				uuid,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fruitid != null">
+				#{fruitid,jdbcType=INTEGER},
+			</if>
+			<if test="fruittypeid != null">
+				#{fruittypeid,jdbcType=INTEGER},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="addtime != null">
+				#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="uuid != null">
+				#{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.wmx.op.po.FruitExample"
+		resultType="java.lang.Integer">
+		select count(*) from fruit
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update fruit
+		<set>
+			<if test="record.fruitid != null">
+				fruitID = #{record.fruitid,jdbcType=INTEGER},
+			</if>
+			<if test="record.fruittypeid != null">
+				fruitTypeID = #{record.fruittypeid,jdbcType=INTEGER},
+			</if>
+			<if test="record.title != null">
+				title = #{record.title,jdbcType=VARCHAR},
+			</if>
+			<if test="record.addtime != null">
+				addtime = #{record.addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.uuid != null">
+				uuid = #{record.uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="record.content != null">
+				content = #{record.content,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExampleWithBLOBs" parameterType="map">
+		update fruit
+		set fruitID = #{record.fruitid,jdbcType=INTEGER},
+		fruitTypeID = #{record.fruittypeid,jdbcType=INTEGER},
+		title =
+		#{record.title,jdbcType=VARCHAR},
+		addtime =
+		#{record.addtime,jdbcType=TIMESTAMP},
+		uuid =
+		#{record.uuid,jdbcType=VARCHAR},
+		content =
+		#{record.content,jdbcType=LONGVARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update fruit
+		set fruitID = #{record.fruitid,jdbcType=INTEGER},
+		fruitTypeID = #{record.fruittypeid,jdbcType=INTEGER},
+		title =
+		#{record.title,jdbcType=VARCHAR},
+		addtime =
+		#{record.addtime,jdbcType=TIMESTAMP},
+		uuid =
+		#{record.uuid,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Fruit">
+		update fruit
+		<set>
+			<if test="fruittypeid != null">
+				fruitTypeID = #{fruittypeid,jdbcType=INTEGER},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="addtime != null">
+				addtime = #{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="uuid != null">
+				uuid = #{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where fruitID = #{fruitid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wmx.op.po.Fruit">
+		update
+		fruit
+		set fruitTypeID = #{fruittypeid,jdbcType=INTEGER},
+		title =
+		#{title,jdbcType=VARCHAR},
+		addtime = #{addtime,jdbcType=TIMESTAMP},
+		uuid = #{uuid,jdbcType=VARCHAR},
+		content =
+		#{content,jdbcType=LONGVARCHAR}
+		where fruitID =
+		#{fruitid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Fruit">
+		update fruit
+		set
+		fruitTypeID = #{fruittypeid,jdbcType=INTEGER},
+		title =
+		#{title,jdbcType=VARCHAR},
+		addtime = #{addtime,jdbcType=TIMESTAMP},
+		uuid = #{uuid,jdbcType=VARCHAR}
+		where fruitID =
+		#{fruitid,jdbcType=INTEGER}
+	</update>
+</mapper>

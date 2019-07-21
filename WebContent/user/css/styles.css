@@ -1,0 +1,65 @@
+body,h1,h2,h3,p,ul,ol,li,dl,dt,dd{margin:0px; padding:0px;}
+ul{list-style:none;}
+a{text-decoration:none;}
+
+#header{
+	width:960px;
+	height:130px;
+	background: #ccc;
+	margin:0px auto;
+}
+  #header .logo{
+  	height:100px;
+  	font:bold 50px/100px 宋体;
+  	text-indent: 20px;
+  }
+  #header .loginInfo{
+  	height:30px;
+  	font:14px/30px 宋体;
+  	text-indent: 10px;
+  }
+#main{
+	width:960px;
+	height:400px;
+	background: #0f0;
+	margin:0px auto;
+}
+  #main .sidebar{
+    width:200px;
+    height:100%;
+    background: #cc0;
+    float:left;
+  }
+    #main .sidebar .mainMenu{
+    	padding:20px 0px 0px 20px;
+    }
+      /*子代选择器*/
+      #main .sidebar .mainMenu>li{
+        font-size:14px;
+        font-weight:bold;
+        cursor:pointer;
+      }
+        #main .sidebar .mainMenu .subMenu{
+          padding-left:20px;
+        }
+          #main .sidebar .mainMenu .subMenu li{
+            font:12px/25px 宋体;
+          }
+  #main .content{
+    width:760px;
+    height:100%;
+    background: #0cc;
+    float:left;
+  }
+     #main .content{
+       font:bold 30px/400px 黑体;
+       text-align: center;
+     }
+#footer{
+	width:960px;
+	height:40px;
+	background: #ccc;
+	margin:0px auto;
+	text-align: center;
+	line-height: 40px;
+}

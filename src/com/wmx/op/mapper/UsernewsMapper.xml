@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.UsernewsMapper">
+	<resultMap id="BaseResultMap" type="com.wmx.op.po.Usernews">
+		<id column="UserNewsID" property="usernewsid" jdbcType="INTEGER" />
+		<result column="UserNewstitle" property="usernewstitle"
+			jdbcType="VARCHAR" />
+		<result column="UserId" property="userid" jdbcType="INTEGER" />
+		<result column="UserNewsAddtime" property="usernewsaddtime"
+			jdbcType="TIMESTAMP" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.wmx.op.po.Usernews"
+		extends="BaseResultMap">
+		<result column="UserNewscontent" property="usernewscontent"
+			jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		UserNewsID, UserNewstitle, UserId, UserNewsAddtime, uuid
+	</sql>
+	<sql id="Blob_Column_List">
+		UserNewscontent
+	</sql>
+	<select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
+		parameterType="com.wmx.op.po.UsernewsExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from usernews
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.UsernewsExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from usernews
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from usernews
+		where UserNewsID = #{usernewsid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from usernews
+		where UserNewsID = #{usernewsid,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.wmx.op.po.UsernewsExample">
+		delete from usernews
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.wmx.op.po.Usernews">
+		insert into usernews (UserNewsID, UserNewstitle, UserId,
+		UserNewsAddtime, uuid, UserNewscontent
+		)
+		values (#{usernewsid,jdbcType=INTEGER}, #{usernewstitle,jdbcType=VARCHAR},
+		#{userid,jdbcType=INTEGER},
+		#{usernewsaddtime,jdbcType=TIMESTAMP}, #{uuid,jdbcType=VARCHAR}, #{usernewscontent,jdbcType=LONGVARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.wmx.op.po.Usernews">
+		insert into usernews
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="usernewsid != null">
+				UserNewsID,
+			</if>
+			<if test="usernewstitle != null">
+				UserNewstitle,
+			</if>
+			<if test="userid != null">
+				UserId,
+			</if>
+			<if test="usernewsaddtime != null">
+				UserNewsAddtime,
+			</if>
+			<if test="uuid != null">
+				uuid,
+			</if>
+			<if test="usernewscontent != null">
+				UserNewscontent,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="usernewsid != null">
+				#{usernewsid,jdbcType=INTEGER},
+			</if>
+			<if test="usernewstitle != null">
+				#{usernewstitle,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=INTEGER},
+			</if>
+			<if test="usernewsaddtime != null">
+				#{usernewsaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="uuid != null">
+				#{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="usernewscontent != null">
+				#{usernewscontent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.wmx.op.po.UsernewsExample"
+		resultType="java.lang.Integer">
+		select count(*) from usernews
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update usernews
+		<set>
+			<if test="record.usernewsid != null">
+				UserNewsID = #{record.usernewsid,jdbcType=INTEGER},
+			</if>
+			<if test="record.usernewstitle != null">
+				UserNewstitle = #{record.usernewstitle,jdbcType=VARCHAR},
+			</if>
+			<if test="record.userid != null">
+				UserId = #{record.userid,jdbcType=INTEGER},
+			</if>
+			<if test="record.usernewsaddtime != null">
+				UserNewsAddtime = #{record.usernewsaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.uuid != null">
+				uuid = #{record.uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="record.usernewscontent != null">
+				UserNewscontent = #{record.usernewscontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExampleWithBLOBs" parameterType="map">
+		update usernews
+		set UserNewsID = #{record.usernewsid,jdbcType=INTEGER},
+		UserNewstitle = #{record.usernewstitle,jdbcType=VARCHAR},
+		UserId = #{record.userid,jdbcType=INTEGER},
+		UserNewsAddtime = #{record.usernewsaddtime,jdbcType=TIMESTAMP},
+		uuid = #{record.uuid,jdbcType=VARCHAR},
+		UserNewscontent = #{record.usernewscontent,jdbcType=LONGVARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update usernews
+		set UserNewsID = #{record.usernewsid,jdbcType=INTEGER},
+		UserNewstitle = #{record.usernewstitle,jdbcType=VARCHAR},
+		UserId = #{record.userid,jdbcType=INTEGER},
+		UserNewsAddtime = #{record.usernewsaddtime,jdbcType=TIMESTAMP},
+		uuid = #{record.uuid,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Usernews">
+		update usernews
+		<set>
+			<if test="usernewstitle != null">
+				UserNewstitle = #{usernewstitle,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				UserId = #{userid,jdbcType=INTEGER},
+			</if>
+			<if test="usernewsaddtime != null">
+				UserNewsAddtime = #{usernewsaddtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="uuid != null">
+				uuid = #{uuid,jdbcType=VARCHAR},
+			</if>
+			<if test="usernewscontent != null">
+				UserNewscontent = #{usernewscontent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where UserNewsID = #{usernewsid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wmx.op.po.Usernews">
+		update usernews
+		set UserNewstitle = #{usernewstitle,jdbcType=VARCHAR},
+		UserId = #{userid,jdbcType=INTEGER},
+		UserNewsAddtime = #{usernewsaddtime,jdbcType=TIMESTAMP},
+		uuid = #{uuid,jdbcType=VARCHAR},
+		UserNewscontent = #{usernewscontent,jdbcType=LONGVARCHAR}
+		where UserNewsID = #{usernewsid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Usernews">
+		update usernews
+		set UserNewstitle = #{usernewstitle,jdbcType=VARCHAR},
+		UserId = #{userid,jdbcType=INTEGER},
+		UserNewsAddtime = #{usernewsaddtime,jdbcType=TIMESTAMP},
+		uuid = #{uuid,jdbcType=VARCHAR}
+		where UserNewsID = #{usernewsid,jdbcType=INTEGER}
+	</update>
+</mapper>

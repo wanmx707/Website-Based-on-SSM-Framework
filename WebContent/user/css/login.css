@@ -1,0 +1,15 @@
+#frmLogin{
+	padding:20px 0px 0px 20px;
+}
+#frmLogin div{
+	height:40px;
+	line-height: 40px;
+}
+#frmLogin .textbox{
+	width:180px;
+	height:25px;
+	padding:2px;
+  }
+#btn{
+	text-align: center;
+}  

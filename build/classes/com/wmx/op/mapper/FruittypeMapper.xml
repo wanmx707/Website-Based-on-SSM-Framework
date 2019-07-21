@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wmx.op.mapper.FruittypeMapper">
+	<resultMap id="BaseResultMap" type="com.wmx.op.po.Fruittype">
+		<id column="fruitTypeID" property="fruittypeid" jdbcType="INTEGER" />
+		<result column="fruitType" property="fruittype" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap type="com.wmx.op.po.Fruittype" id="BaseResultMapFruit"
+		extends="BaseResultMap">
+		<collection property="fruitList" ofType="com.wmx.op.po.Fruit">
+			<id column="fruitID" property="fruitid" />
+			<result column="fruitTypeID" property="fruittypeid" />
+			<result column="title" property="title" />
+			<result column="addtime" property="addtime" />
+			<result column="uuid" property="uuid" />
+			<result column="content" property="content" />
+		</collection>
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		fruitTypeID, fruitType
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.wmx.op.po.FruittypeExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from fruittype
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<!-- 查询果实列表 -->
+	<select id="selectFruitList" resultMap="BaseResultMapFruit">
+		SELECT * FROM fruit,fruittype WHERE fruit.fruitTypeID=fruittype.fruitTypeID
+	</select>
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from fruittype
+		where fruitTypeID = #{fruittypeid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		fruittype
+		where fruitTypeID = #{fruittypeid,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.wmx.op.po.FruittypeExample">
+		delete from fruittype
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.wmx.op.po.Fruittype">
+		insert into fruittype
+		(fruitTypeID, fruitType)
+		values (#{fruittypeid,jdbcType=INTEGER},
+		#{fruittype,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.wmx.op.po.Fruittype">
+		insert into fruittype
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fruittypeid != null">
+				fruitTypeID,
+			</if>
+			<if test="fruittype != null">
+				fruitType,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fruittypeid != null">
+				#{fruittypeid,jdbcType=INTEGER},
+			</if>
+			<if test="fruittype != null">
+				#{fruittype,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.wmx.op.po.FruittypeExample"
+		resultType="java.lang.Integer">
+		select count(*) from fruittype
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update fruittype
+		<set>
+			<if test="record.fruittypeid != null">
+				fruitTypeID = #{record.fruittypeid,jdbcType=INTEGER},
+			</if>
+			<if test="record.fruittype != null">
+				fruitType = #{record.fruittype,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update fruittype
+		set fruitTypeID =
+		#{record.fruittypeid,jdbcType=INTEGER},
+		fruitType =
+		#{record.fruittype,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wmx.op.po.Fruittype">
+		update fruittype
+		<set>
+			<if test="fruittype != null">
+				fruitType = #{fruittype,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where fruitTypeID = #{fruittypeid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wmx.op.po.Fruittype">
+		update fruittype
+		set fruitType = #{fruittype,jdbcType=VARCHAR}
+		where fruitTypeID =
+		#{fruittypeid,jdbcType=INTEGER}
+	</update>
+</mapper>
